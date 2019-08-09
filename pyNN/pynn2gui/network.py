@@ -1,9 +1,12 @@
+import pyNN
 from pyNN import network
 from . import simulator
 from pyNN.common import Population, PopulationView, Projection, Assembly
 from itertools import chain
 import xml.etree.ElementTree as et
 import json
+import os
+import re
 
 class Network(network.Network):
     __doc__ = network.Network.__doc__
@@ -49,18 +52,60 @@ class Network(network.Network):
     
     def _header_mxgraph(self,id,header):
         header.set('id','%s' %(id))
-        header.set('data_cell','_fonction_to_do')
+        header.set('data_cell','{celltype: empty_no_edge}')
         if id != 0:
             header.set('parent','%s' %(id-1))
         return header
     
-    def _cell_desc(self,id,header):
+    def _cell_desc(self,id,cell,data):
+        cell.set('id','%s' %(id))
+        cell.set('value','%s' %())
+        cell.set('data_cell', '%s' % _data_cell_description(data))
+        cell.set('vertex','%s' %(1))
+        cell.set('parent','%s' %(1))
+        return cell
+
+    def _geom_desc(self,id,geom):
         return
 
-    def _geom_desc(self,id,header):
-        return
+    def _data_cell_description(self, data):
+        desc = ''
+        desc += '{'
+        desc += 'name_value:%s' % 
+        desc += 'celltype:%s' % 
+        desc = ',%s:%s' %()
+        dec += '}'
+        return desc
+
+
+    def _load_data_description(self):
+        path = os.path.dirname(pyNN.__file__)
+        with open('%s/pynn2gui/gui_parameters.json' % path) as f:
+            data = json.load(f)
+        return data
+
+    def _data_update(self,data,pop):
+        data[]
+        for parameter_name in population.celltype.default_parameters:
+            match = ''
+            max_score = 0.
+            score = 0.
+            for d in data['population']:
+                found = re.search(parameter_name,d)
+                if found:
+                    score = (found.end()-found.start())/len(d)
+                else:
+                    score = 0
+                if score > max_score:
+                    max_score = score
+                    match = d
+            data['population'][match] = pop.get(parameter_name, gather=True, simplify=True)
+        return data
 
     def xml_struct(self):
+        # loading the decription of PyNN objects
+        data = self._load_data_description()
+
         # create the file structure
         model = et.Element('mxGraphModel')  
         root = et.SubElement(model, 'root')
@@ -69,31 +114,42 @@ class Network(network.Network):
             root.append(header)
             self._header_mxgraph(id,header)
         for i, p in enumerate(self.populations):
+            desc = copy(data)
+            self._data_update(desc,p)
             id+=1
             cell = et.SubElement(root, 'mxCell')  
             geom = et.XML("<mxGeometry />")
             cell.append(geom)
-            self._cell_desc(id,header)
-            self._geom_desc(id,header)
+            self._cell_desc(id,cell,desc)
+            self._geom_desc(id,geom)
         # item2 = et.SubElement(items, 'item')  
         # item1.set('name','item1') 
         # item1.set('test','test1') 
         # elem.set('nametest','itemtest')  
         # item1.text = 'item1abc'  
         # item2.text = 'item2abc'
-
-        with open('gui_parameters.json') as f:
-            data = json.load(f)
         
-        for id, p in enumerate(self.populations):
-            print(i)
-            print(p)
-            print(p.celltype.__class__.__name__)
-            print(p.celltype.default_parameters)
-            for parameter_name in p.celltype.default_parameters:
-                print(p.get(parameter_name, gather=True, simplify=True))
-
-
+        # for id, p in enumerate(self.populations):
+        #     # print(i)
+        #     # print(p)
+        #     # print(p.celltype.__class__.__name__)
+        #     # print(p.celltype.default_parameters)
+        #     for parameter_name in p.celltype.default_parameters:
+        #         match = ''
+        #         max_score = 0.
+        #         score = 0.
+        #         for d in data['population']:
+        #             found = re.search(parameter_name,d)
+        #             if found:
+        #                 score = (found.end()-found.start())/len(d)
+        #             else:
+        #                 score = 0
+        #             if score > max_score:
+        #                 max_score = score
+        #                 match = d
+        #         # print(match,parameter_name)
+        #         data['population'][match] = p.get(parameter_name, gather=True, simplify=True)
+        #     print(data)
 
         # create a new XML file with the results
         print(model)
@@ -102,28 +158,28 @@ class Network(network.Network):
         # myfile = open("items2.xml", "w")  
         # myfile.write(mydata)  
 
-    def export(self, outfile, level, namespaceprefix_='', namespacedef_='', name_='Constant', pretty_print=True):
+    # def export(self, outfile, level, namespaceprefix_='', namespacedef_='', name_='Constant', pretty_print=True):
         
 
-        imported_ns_def_ = GenerateDSNamespaceDefs_.get('Constant')
-        if imported_ns_def_ is not None:
-            namespacedef_ = imported_ns_def_
-        if pretty_print:
-            eol_ = '\n'
-        else:
-            eol_ = ''
-        if self.original_tagname_ is not None:
-            name_ = self.original_tagname_
-        showIndent(outfile, level, pretty_print)
-        outfile.write('<%s%s%s' % (namespaceprefix_, name_, namespacedef_ and ' ' + namespacedef_ or '', ))
-        already_processed = set()
-        self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_='Constant')
-        if self.hasContent_():
-            outfile.write('>%s' % (eol_, ))
-            self.exportChildren(outfile, level + 1, namespaceprefix_, namespacedef_, name_='Constant', pretty_print=pretty_print)
-            outfile.write('</%s%s>%s' % (namespaceprefix_, name_, eol_))
-        else:
-            outfile.write('/>%s' % (eol_, ))
+    #     imported_ns_def_ = GenerateDSNamespaceDefs_.get('Constant')
+    #     if imported_ns_def_ is not None:
+    #         namespacedef_ = imported_ns_def_
+    #     if pretty_print:
+    #         eol_ = '\n'
+    #     else:
+    #         eol_ = ''
+    #     if self.original_tagname_ is not None:
+    #         name_ = self.original_tagname_
+    #     showIndent(outfile, level, pretty_print)
+    #     outfile.write('<%s%s%s' % (namespaceprefix_, name_, namespacedef_ and ' ' + namespacedef_ or '', ))
+    #     already_processed = set()
+    #     self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_='Constant')
+    #     if self.hasContent_():
+    #         outfile.write('>%s' % (eol_, ))
+    #         self.exportChildren(outfile, level + 1, namespaceprefix_, namespacedef_, name_='Constant', pretty_print=pretty_print)
+    #         outfile.write('</%s%s>%s' % (namespaceprefix_, name_, eol_))
+    #     else:
+    #         outfile.write('/>%s' % (eol_, ))
 
 net = Network()
 
