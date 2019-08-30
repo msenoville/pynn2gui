@@ -46,7 +46,7 @@ class Population(common.Population):
 
     def __init__(self, size, cellclass, cellparams=None, structure=None,
                 initial_values={}, label=None):
-        super(Population, self).__init__(size, cellclass, cellparams, structure,initial_values, label)
+        super(Population, self).__init__(size, cellclass, cellparams, structure ,initial_values, label)
         network.net += self
 
     def _create_cells(self):

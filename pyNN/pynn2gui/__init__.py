@@ -15,7 +15,10 @@ from pyNN.connectors import *
 from pyNN.recording import *
 from . import simulator
 from . import network
-from .standardmodels import *
+from .standardmodels.cells import *
+from .standardmodels.synapses import *
+from .standardmodels.electrodes import *
+# from .standardmodels import 
 from .populations import Population, PopulationView, Assembly
 from .projections import Projection
 from neo.io import get_io
