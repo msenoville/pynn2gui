@@ -9,6 +9,8 @@ import os
 import re
 import copy
 import pprint as pp
+import xml.dom.minidom as md
+
 
 class Network(network.Network):
     __doc__ = network.Network.__doc__
@@ -25,7 +27,7 @@ class Network(network.Network):
                 if isinstance(obj, Population):
                     self.populations.add(obj)
                 elif isinstance(obj, PopulationView):
-                    self.view.add(obj)
+                    self.views.add(obj)
                 elif isinstance(obj, Assembly):
                     self.assemblies.add(obj)
                 elif isinstance(obj, Projection):                   
@@ -59,24 +61,37 @@ class Network(network.Network):
             header.set('parent','%s' %(id-1))
         return header
     
-    def _data_cell_description(self, data):
+    def _data_cell_description(self, p, data):
         desc = ''
         desc += '{'
-        for d in data['population']:        
-            desc += '%s:%s,' %(d, data['population'][d])
+        for d in data[p]:        
+            desc += '%s:%s,' %(d, data[p][d])
         desc = desc[:-1]
         desc += '}'
         return desc
 
     def _cell_desc(self,id,p,cell,data):
+        obj = 'population'
+        if isinstance(p, Population):
+            obj = 'population'
+            cell.set('vertex','%s' %(1))
+        elif isinstance(p, Projection):
+            obj = 'projection'
+            for i, pop in enumerate(self.populations):
+                if pop == p.pre:
+                    source = i + 2
+                elif pop == p.post:
+                    target = i + 2
+            cell.set('edge','%s' %(1)) # maybe on to-do list, wip
+            cell.set('source','%s' %(source))
+            cell.set('target','%s' %(target))
         cell.set('id','%s' %(id))
-        cell.set('value','%s' % data['population']['name_value'])
-        cell.set('data_cell', '%s' %self._data_cell_description(data))
-        cell.set('vertex','%s' %(1))
+        cell.set('value','%s' % data[obj]['name_value'])
+        cell.set('data_cell', '%s' %self._data_cell_description(obj, data))
         cell.set('parent','%s' %(1))
         return cell
 
-    def _geom_desc(self,id,p,geom):
+    def _geom_desc(self,id,p,geom): # to do, wip
         geom.set('x','420')
         geom.set('y','255')
         geom.set('width','80')
@@ -108,10 +123,7 @@ class Network(network.Network):
             if score > max_score:
                 max_score = score
                 match = d
-        if isinstance(p, Population):
-            data[obj][match] = p.get(parameter_name, gather=True, simplify=True)
-        elif isinstance(p, Projection):
-            data[obj][match] = prj.get(parameter_name, 'array', gather=True,  with_address=True, multiple_synapses='first')[0][0]
+        data[obj][match] = value
         return data  
 
     def _data_update(self,data,p):
@@ -122,18 +134,43 @@ class Network(network.Network):
             # data[obj]['label'] = p.label
             data[obj]['name_value'] = p.label
             for parameter_name in p.celltype.default_parameters:
+                value = p.get(parameter_name, gather=True, simplify=True)
                 self._matching_search(obj, parameter_name, None, data)
         elif isinstance(p, Projection):
             obj = 'projection'
             data[obj]['connectors_type'] = p._connector.__class__.__name__
             data[obj]['receptor_type'] = p.receptor_type
             data[obj]['synapse_type'] = p.synapse_type.__class__.__name__
-            data[obj]['name_value'] = p.label
+            data[obj]['name_value'] = p.label.replace('→','_2_')
             for parameter_name in p.synapse_type.default_parameters:
-                self._matching_search(obj, parameter_name, None, data)
-            for n, v in p._connector.get_parameters().items():
-                self._matching_search(obj, n, v, data)
+                value = p.get(parameter_name, 'array', gather=True,  with_address=True, multiple_synapses='first')[0][0]
+                self._matching_search(obj, parameter_name, value, data)
+            for parameter_name, value in p._connector.get_parameters().items():
+                self._matching_search(obj, parameter_name, value, data)
         return data
+
+    # def _xmlprettyprint(self, stringlist):
+    #     indent = ''
+    #     in_tag = False
+    #     for token in stringlist:
+    #         if token.startswith('</'):
+    #             indent = indent[:-2]
+    #             yield indent + token + '\n'
+    #             in_tag = True
+    #         elif token.startswith('<'):
+    #             yield indent + token
+    #             indent += '  '
+    #             in_tag = True
+    #         elif token == '>':
+    #             yield '>' + '\n'
+    #             in_tag = False
+    #         elif in_tag:
+    #             yield token
+    #         else:
+    #             yield indent + token + '\n'
+
+    # def xmlprettyprint(self, element):
+    #     return ''.join(self._xmlprettyprint(et.tostringlist(element)))
 
     def xml_struct(self):
         # loading the decription of PyNN objects
@@ -155,35 +192,9 @@ class Network(network.Network):
             cell.append(geom)
             self._cell_desc(id,p,cell,desc)
             self._geom_desc(id,p,geom)
+        for item in model.findall("mxCell"):
+            print('found', et.dump(item))
         xml_tree = et.ElementTree(model)
-        # item2 = et.SubElement(items, 'item')  
-        # item1.set('name','item1') 
-        # item1.set('test','test1') 
-        # elem.set('nametest','itemtest')  
-        # item1.text = 'item1abc'  
-        # item2.text = 'item2abc'
-        
-        # for id, p in enumerate(self.populations):
-        #     # print(i)
-        #     # print(p)
-        #     # print(p.celltype.__class__.__name__)
-        #     # print(p.celltype.default_parameters)
-        #     for parameter_name in p.celltype.default_parameters:
-        #         match = ''
-        #         max_score = 0.
-        #         score = 0.
-        #         for d in data['population']:
-        #             found = re.search(parameter_name,d)
-        #             if found:
-        #                 score = (found.end()-found.start())/len(d)
-        #             else:
-        #                 score = 0
-        #             if score > max_score:
-        #                 max_score = score
-        #                 match = d
-        #         # print(match,parameter_name)
-        #         data['population'][match] = p.get(parameter_name, gather=True, simplify=True)
-        #     print(data)
 
         # create a new XML file with the results
         # print(model)
@@ -191,14 +202,22 @@ class Network(network.Network):
         # print(mydata)
         # myfile = open("test_gui.xml", "w")  
         # myfile.write(str(mydata))
-        xml_tree.write("test_gui.xml") 
+        xml_tree.write("test_gui.xml")
+        stringlist = et.tostring(model, 'utf-8')
+        reparsed = md.parseString(stringlist)
+        st = reparsed.toprettyxml(indent="    ")
+        print(st)
+
+        # self.xmlprettyprint(xml_tree)
+
+
+# if __name__ == '__main__':
+#     e = ElementTree.fromstring('<foo><bar>joe'
+#                                '<baz name="sue">eve</baz>'
+#                                '</bar></foo>')
+#     print xmlprettyprint(e)
 
     # def export(self, outfile, level, namespaceprefix_='', namespacedef_='', name_='Constant', pretty_print=True):
-        
-
-    #     imported_ns_def_ = GenerateDSNamespaceDefs_.get('Constant')
-    #     if imported_ns_def_ is not None:
-    #         namespacedef_ = imported_ns_def_
     #     if pretty_print:
     #         eol_ = '\n'
     #     else:
