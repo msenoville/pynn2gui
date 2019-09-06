@@ -10,6 +10,9 @@ import re
 import copy
 import pprint as pp
 import xml.dom.minidom as md
+import numpy as np
+
+# TO DO: modify strings inputs sometimes
 
 
 class Network(network.Network):
@@ -53,7 +56,25 @@ class Network(network.Network):
             n0 += n
         """
         return self.__class__.__add__(self, other)
-    
+
+    def _sorted_geom(self):
+        # sorted_list = np.array([[None],[None],[None]], dtype=list)
+        exc = []
+        inh = []
+        stim = []
+        for p in self.projections:
+            if p.receptor_type == 'inhibitory':
+                inh.append(p.post.label)
+        for p in self.populations:
+            if 'standard_receptor_type' in p.celltype.__class__.__dict__ and p.label not in inh:
+                exc.append(p.label)
+            elif p.label not in inh:
+                stim.append(p.label)
+        exc = sorted(exc)
+        inh = sorted(inh)
+        stim = sorted(stim)
+        return exc, inh, stim
+
     def _header_mxgraph(self,id,header):
         header.set('id','%s' %(id))
         header.set('data_cell','{celltype: empty_no_edge}')
@@ -72,9 +93,15 @@ class Network(network.Network):
 
     def _cell_desc(self,id,p,cell,data):
         obj = 'population'
+        color = ['red','blue','orange']
+        font = ['white', 'white', 'black']
         if isinstance(p, Population):
             obj = 'population'
-            cell.set('vertex','%s' %(1))
+            for test in (0, 1, 2):
+                if p.label in self._sorted_geom()[test]:
+                    r = test
+            cell.set('vertex', str(1))
+            cell.set('style','fontColor=%s;fillColor=%s' %(font[r],color[r]))
         elif isinstance(p, Projection):
             obj = 'projection'
             for i, pop in enumerate(self.populations):
@@ -92,11 +119,24 @@ class Network(network.Network):
         return cell
 
     def _geom_desc(self,id,p,geom): # to do, wip
-        geom.set('x','420')
-        geom.set('y','255')
-        geom.set('width','80')
-        geom.set('height','30')
+        x = [230, 430, 30]
+        y = [90, 90, 30]
+        height = 30
+        width = 80
+        gap = 60
         geom.set('as','geometry')
+        if isinstance(p, Population):
+            sort = self._sorted_geom()
+            for r in (0, 1, 2):
+                if p.label in sort[r]:
+                    r_type = r
+            i = sort[r_type].index(p.label)
+            geom.set('x',str(x[r_type]))
+            geom.set('y',str(y[r_type]+i*(height+gap)))
+            geom.set('width', str(width))
+            geom.set('height', str(height))
+        if isinstance(p, Projection):
+            geom.set('relative',str(1))
         return geom
 
     def _load_data_description(self):
@@ -149,29 +189,6 @@ class Network(network.Network):
                 self._matching_search(obj, parameter_name, value, data)
         return data
 
-    # def _xmlprettyprint(self, stringlist):
-    #     indent = ''
-    #     in_tag = False
-    #     for token in stringlist:
-    #         if token.startswith('</'):
-    #             indent = indent[:-2]
-    #             yield indent + token + '\n'
-    #             in_tag = True
-    #         elif token.startswith('<'):
-    #             yield indent + token
-    #             indent += '  '
-    #             in_tag = True
-    #         elif token == '>':
-    #             yield '>' + '\n'
-    #             in_tag = False
-    #         elif in_tag:
-    #             yield token
-    #         else:
-    #             yield indent + token + '\n'
-
-    # def xmlprettyprint(self, element):
-    #     return ''.join(self._xmlprettyprint(et.tostringlist(element)))
-
     def xml_struct(self):
         # loading the decription of PyNN objects
         data = self._load_data_description()
@@ -209,31 +226,6 @@ class Network(network.Network):
         print(st)
 
         # self.xmlprettyprint(xml_tree)
-
-
-# if __name__ == '__main__':
-#     e = ElementTree.fromstring('<foo><bar>joe'
-#                                '<baz name="sue">eve</baz>'
-#                                '</bar></foo>')
-#     print xmlprettyprint(e)
-
-    # def export(self, outfile, level, namespaceprefix_='', namespacedef_='', name_='Constant', pretty_print=True):
-    #     if pretty_print:
-    #         eol_ = '\n'
-    #     else:
-    #         eol_ = ''
-    #     if self.original_tagname_ is not None:
-    #         name_ = self.original_tagname_
-    #     showIndent(outfile, level, pretty_print)
-    #     outfile.write('<%s%s%s' % (namespaceprefix_, name_, namespacedef_ and ' ' + namespacedef_ or '', ))
-    #     already_processed = set()
-    #     self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_='Constant')
-    #     if self.hasContent_():
-    #         outfile.write('>%s' % (eol_, ))
-    #         self.exportChildren(outfile, level + 1, namespaceprefix_, namespacedef_, name_='Constant', pretty_print=pretty_print)
-    #         outfile.write('</%s%s>%s' % (namespaceprefix_, name_, eol_))
-    #     else:
-    #         outfile.write('/>%s' % (eol_, ))
 
 net = Network()
 
