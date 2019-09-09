@@ -63,8 +63,8 @@ class Network(network.Network):
         inh = []
         stim = []
         for p in self.projections:
-            if p.receptor_type == 'inhibitory':
-                inh.append(p.post.label)
+            if p.receptor_type == 'inhibitory' and p.pre.label not in inh:
+                inh.append(p.pre.label)
         for p in self.populations:
             if 'standard_receptor_type' in p.celltype.__class__.__dict__ and p.label not in inh:
                 exc.append(p.label)
@@ -73,6 +73,7 @@ class Network(network.Network):
         exc = sorted(exc)
         inh = sorted(inh)
         stim = sorted(stim)
+        print(exc, inh, stim)
         return exc, inh, stim
 
     def _header_mxgraph(self,id,header):
@@ -95,6 +96,7 @@ class Network(network.Network):
         obj = 'population'
         color = ['red','blue','orange']
         font = ['white', 'white', 'black']
+        source = target = 0
         if isinstance(p, Population):
             obj = 'population'
             for test in (0, 1, 2):
@@ -110,8 +112,8 @@ class Network(network.Network):
                 elif pop == p.post:
                     target = i + 2
             cell.set('edge','%s' %(1)) # maybe on to-do list, wip
-            cell.set('source','%s' %(source))
-            cell.set('target','%s' %(target))
+            cell.set('source', str(source))
+            cell.set('target', str(target))
         cell.set('id','%s' %(id))
         cell.set('value','%s' % data[obj]['name_value'])
         cell.set('data_cell', '%s' %self._data_cell_description(obj, data))
@@ -181,7 +183,7 @@ class Network(network.Network):
             data[obj]['connectors_type'] = p._connector.__class__.__name__
             data[obj]['receptor_type'] = p.receptor_type
             data[obj]['synapse_type'] = p.synapse_type.__class__.__name__
-            data[obj]['name_value'] = p.label.replace('→','_2_')
+            data[obj]['name_value'] = p.label.replace('→','_to_')
             for parameter_name in p.synapse_type.default_parameters:
                 value = p.get(parameter_name, 'array', gather=True,  with_address=True, multiple_synapses='first')[0][0]
                 self._matching_search(obj, parameter_name, value, data)
