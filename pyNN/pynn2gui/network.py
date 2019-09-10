@@ -10,6 +10,7 @@ import re
 import copy
 import pprint as pp
 import xml.dom.minidom as md
+from xml.dom.minidom import Text, Element
 import numpy as np
 
 # TO DO: modify strings inputs sometimes
@@ -73,7 +74,7 @@ class Network(network.Network):
         exc = sorted(exc)
         inh = sorted(inh)
         stim = sorted(stim)
-        print(exc, inh, stim)
+        # print(exc, inh, stim)
         return exc, inh, stim
 
     def _header_mxgraph(self,id,header):
@@ -86,8 +87,13 @@ class Network(network.Network):
     def _data_cell_description(self, p, data):
         desc = ''
         desc += '{'
-        for d in data[p]:        
-            desc += '%s:%s,' %(d, data[p][d])
+        for d in data[p]:
+            if data[p][d] is "":
+                desc += '&quot;%s&quot;:&quot;&quot;,' % d
+            elif isinstance(data[p][d],str):
+                desc += '&quot;%s&quot;:&quot;%s&quot;,' %(d, data[p][d])
+            else:
+                desc += '&quot;%s&quot;:%s,' %(d, data[p][d])
         desc = desc[:-1]
         desc += '}'
         return desc
@@ -96,7 +102,7 @@ class Network(network.Network):
         obj = 'population'
         color = ['red','blue','orange']
         font = ['white', 'white', 'black']
-        source = target = 0
+        source = target = int()
         if isinstance(p, Population):
             obj = 'population'
             for test in (0, 1, 2):
@@ -109,7 +115,7 @@ class Network(network.Network):
             for i, pop in enumerate(self.populations):
                 if pop == p.pre:
                     source = i + 2
-                elif pop == p.post:
+                if pop == p.post:
                     target = i + 2
             cell.set('edge','%s' %(1)) # maybe on to-do list, wip
             cell.set('source', str(source))
@@ -221,11 +227,19 @@ class Network(network.Network):
         # print(mydata)
         # myfile = open("test_gui.xml", "w")  
         # myfile.write(str(mydata))
-        xml_tree.write("test_gui.xml")
-        stringlist = et.tostring(model, 'utf-8')
+        # xml_tree.write("test_gui.xml", encoding="utf-8", method='text')
+        stringlist = et.tostring(model, 'utf-8', method="html")
+        st1 = str(stringlist)
         reparsed = md.parseString(stringlist)
-        st = reparsed.toprettyxml(indent="    ")
-        print(st)
+        # st1 = reparsed.toxml()
+        st3= reparsed.toprettyxml(indent="   ")
+        st2 = st1.replace('&amp;quot;','&quot;')
+        st2 = st2[2:-1]
+        # st2.replace("<?xml version=\"1.0\" ?>",'')
+        print(st3)
+        myfile = open("test_gui.xml", "w")  
+        myfile.write(st2)
+
 
         # self.xmlprettyprint(xml_tree)
 
