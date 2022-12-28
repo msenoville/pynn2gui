@@ -1,5 +1,0 @@
-======
-NineML
-======
-
-The NineML backend is described in :doc:`../nineml`

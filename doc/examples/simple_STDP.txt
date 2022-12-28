@@ -1,7 +1,0 @@
-A very simple example of using STDP
-===================================
-
-.. image:: ../images/examples/simple_stdp_neuron_20170505-150331.png
-
-.. literalinclude:: ../../examples/simple_STDP.py
-

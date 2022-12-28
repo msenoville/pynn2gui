@@ -1,7 +1,0 @@
-A demonstration of the responses of different standard neuron models to synaptic input
-======================================================================================
-
-.. image:: ../images/examples/synaptic_input_neuron_20170505-150337.png
-
-.. literalinclude:: ../../examples/synaptic_input.py
-
