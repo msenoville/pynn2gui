@@ -1,0 +1,46 @@
+﻿<mxGraphModel>
+<root>
+<mxCell id="0" data_cell="{celltype: empty_no_edge}"/>
+<mxCell id="1" data_cell="{celltype: empty_no_edge}" parent="0"/>
+<mxCell id="4" value="Pop" data_cell="{celltype: empty_no_edge}" vertex="1" parent="1"><mxGeometry x="-90" y="-30" width="80" height="30" as="geometry"/>
+</mxCell>
+<mxCell id="5" value="Pop1" data_cell="{name_value:Pop1,size:1,celltype:IF_curr_alpha,v_rest_dist:0,param_v_rest_dist:0,param_v_rest:-65,param_cm_dist:0,param_cm:1,param_tau_m_dist:0,param_tau_m:20,param_tau_refrac_dist:0,param_tau_refrac:0,param_tau_syn_E_dist:0,param_tau_syn_E:5,param_tau_syn_I_dist:0,param_tau_syn_I:5,param_i_offset_dist:0,param_i_offset:0,param_v_reset_dist:0,param_v_reset:-65,param_v_thresh_dist:0,param_v_thresh:-50,param_e_rev_E_dist:0,param_e_rev_E:,param_e_rev_I_dist:0,param_e_rev_I:,param_gbar_Na_dist:0,param_gbar_Na:,param_gbar_K_dist:0,param_gbar_K:,param_g_leak_dist:0,param_g_leak:,param_v_offset_dist:0,param_v_offset:,param_e_rev_Na_dist:0,param_e_rev_Na:,param_e_rev_K_dist:0,param_e_rev_K:,param_e_rev_leak_dist:0,param_e_rev_leak:,param_tau_cm:,param_v_spike_dist:0,param_v_spike:,param_a_dist:0,param_a:,param_b_dist:0,param_b:,param_delta_T_dist:0,param_delta_T:,param_tau_w_dist:0,param_tau_w:,init_isyn_exc:0,init_isyn_inh:0,init_gsyn_exc:,init_gsyn_inh:,init_v_dist:0,init_v:-65,init_w_dist:0,init_w:,Recording_spikes:true,Recording_v:,Simulation_time:,Simulation_name:,param_rate_dist:0,param_rate:,param_start_dist:0,param_start:,param_duration_dist:0,param_duration:}" vertex="1" parent="1"><mxGeometry x="420" y="255" width="80" height="30" as="geometry"/></mxCell>
+<mxCell id="6" value="Pop2" data_cell="{name_value:Pop2,size:1,celltype:SpikeSourcePoisson,v_rest_dist:0,param_v_rest_dist:0,param_v_rest:-65,param_cm_dist:0,param_cm:1,param_tau_m_dist:0,param_tau_m:20,param_tau_refrac_dist:0,param_tau_refrac:0,param_tau_syn_E_dist:0,param_tau_syn_E:5,param_tau_syn_I_dist:0,param_tau_syn_I:5,param_i_offset_dist:0,param_i_offset:0,param_v_reset_dist:0,param_v_reset:-65,param_v_thresh_dist:0,param_v_thresh:-50,param_e_rev_E_dist:0,param_e_rev_E:,param_e_rev_I_dist:0,param_e_rev_I:,param_gbar_Na_dist:0,param_gbar_Na:,param_gbar_K_dist:0,param_gbar_K:,param_g_leak_dist:0,param_g_leak:,param_v_offset_dist:0,param_v_offset:,param_e_rev_Na_dist:0,param_e_rev_Na:,param_e_rev_K_dist:0,param_e_rev_K:,param_e_rev_leak_dist:0,param_e_rev_leak:,param_tau_cm:,param_v_spike_dist:0,param_v_spike:,param_a_dist:0,param_a:,param_b_dist:0,param_b:,param_delta_T_dist:0,param_delta_T:,param_tau_w_dist:0,param_tau_w:,init_isyn_exc:0,init_isyn_inh:0,init_gsyn_exc:,init_gsyn_inh:,init_v_dist:0,init_v:-65,init_w_dist:0,init_w:,Recording_spikes:,Recording_v:,Simulation_time:,Simulation_name:,param_rate_dist:0,param_rate:100,param_start_dist:0,param_start:0,param_duration_dist:0,param_duration:10000000000}" vertex="1" parent="1"><mxGeometry x="500" y="405" width="80" height="30" as="geometry"/></mxCell>
+<mxCell id="7" value="proj" data_cell="{name_value:proj,synapse_type:static,receptor_type:excitatory,connectors_type:AllToAll,param_synaptic_weight_dist:0,synaptic_weight:0.1,param_synaptic_weight_distribution:,param_synaptic_weight_p1:,param_synaptic_weight_p2:,param_synaptic_weight_fx:,param_synaptic_delay_dist:0,synaptic_delay:0.1,param_synaptic_delay_distribution:,param_synaptic_delay_p1:,param_synaptic_delay_p2:,param_synaptic_delay_fx:,TsodyksMarkram_U_dist:0,TsodyksMarkram_U:,TsodyksMarkram_U_distribution:,TsodyksMarkram_U_p1:,TsodyksMarkram_U_p2:,TsodyksMarkram_U_fx:,TsodyksMarkram_tau_rec_dist:0,TsodyksMarkram_tau_rec:,TsodyksMarkram_tau_rec_distribution:,TsodyksMarkram_tau_rec_p1:,TsodyksMarkram_tau_rec_p2:,TsodyksMarkram_tau_rec_fx:,TsodyksMarkram_tau_facil_dist:0,TsodyksMarkram_tau_facil:,TsodyksMarkram_tau_facil_distribution:,TsodyksMarkram_tau_facil_p1:,TsodyksMarkram_tau_facil_p2:,TsodyksMarkram_tau_facil_fx:,AllToAll_allow_self_connections:false,FixedProbability_p_connect:,FixedProbability_allow_self_connections:false,FromFile_file:,FromFile_distributed:false,FromFile_safe:false,FromFile_callback:false,FixedNumberPre_n:,FixedNumberPre_with_replacement:false,FixedNumberPre_allow_self_connections:false,FixedNumberPost_n:,FixedNumberPost_with_replacement:false,FixedNumberPost_allow_self_connections:false,FixedTotalNumber_n:,FixedTotalNumber_with_replacement:false,FixedTotalNumber_allow_self_connections:false,DistanceDependent_d_expression:,DistanceDependent_allow_self_connections:false,celltype:projection}" edge="1" parent="1" source="6" target="5"><mxGeometry relative="1" as="geometry"/></mxCell>
+</root>
+</mxGraphModel>
+
+
+
+
+﻿<mxGraphModel>
+<root>
+<mxCell id="0" data_cell="{celltype: empty_no_edge}"/>
+<mxCell id="1" data_cell="{celltype: empty_no_edge}" parent="0"/>
+</root></mxGraphModel>
+
+<mxGraphModel>
+<root>
+<item name="item1">item1abc</item>
+<item name="item2">item2abc</item>
+</root>
+</mxGraphModel>
+
+<mxGraphModel>
+<root>
+<mxCell id="0" data_cell="{celltype: empty_no_edge}"/>
+<mxCell id="1" data_cell="{celltype: empty_no_edge}" parent="0"/>
+<mxCell id="2" value="Pop" vertex="1" parent="1">
+    <mxGeometry x="210" y="210" width="80" height="30" as="geometry"/>
+</mxCell>
+</root>
+</mxGraphModel>
+
+<mxGraphModel>
+<root>
+<mxCell name="item1" test="test1">
+item1abc<body><tag /></body>
+</mxCell>
+<item name="item2">item2abc</item>
+</root>
+</mxGraphModel>
