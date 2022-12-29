@@ -10,13 +10,12 @@ setup(
       ],
   version = "0.1.0",
   license="",
-  description = "Module to export any PyNN script to the PyNN GUI (in dev).",
+  description = "Module to export any PyNN script to the PyNN GUI (wip).",
   long_description = long_description,
   long_description_content_type = "text/markdown",
   author = "Matthieu Sénoville",
   author_email = "matthieu.senoville@cnrs.fr",
   url = "https://github.com/msenoville/pynn2gui",
-#   download_url = "https://github.com/NMCog/archive/v0.2.27.tar.gz",
   keywords = ["PYNN","NEUROMORPHIC", "SPIKING", "NEURAL NETWORK", "SPINNAKER", "BRAINSCALES, NEST"],
   install_requires=[
          "pyNN>=0.8.0"

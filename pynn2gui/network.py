@@ -1,3 +1,7 @@
+"""
+Functions for handling PyNN objects as Networks and exporting networks to .xml files
+"""
+
 import pyNN
 from pyNN import network
 from pynn2gui import simulator

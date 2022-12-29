@@ -1,10 +1,10 @@
 """
-Mock implementation of the PyNN API, for testing and documentation purposes.
+This module is an extension of Mock implementation of the PyNN API, 
+for testing and documentation purposes.
 
-This simulator implements the PyNN API, but generates random data rather than
-really running simulations.
+This simulator implements the PyNN API, but was developped in order to generate an xml description of a network. 
 
-:copyright: Copyright 2006-2016 by the PyNN team, see AUTHORS.
+:copyright: Copyright 2006-2022 by the PyNN team, see AUTHORS.
 :license: CeCILL, see LICENSE for details.
 """
 
