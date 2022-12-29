@@ -1,5 +1,5 @@
-PyNN
-====
+pynn2gui
+========
 
 Python module to export any PyNN script to the PyNN graphical model builder (PyNN GUI).
 
