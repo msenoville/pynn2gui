@@ -1,8 +1,8 @@
 import pyNN
 from pyNN import network
 from pynn2gui import simulator
-from .populations import Population, PopulationView, Assembly
-from .projections import Projection
+# from .populations import Population, PopulationView, Assembly
+# from .projections import Projection
 # from pyNN.common import Population, PopulationView, Projection, Assembly
 from itertools import chain
 import xml.etree.ElementTree as et
@@ -268,6 +268,6 @@ class Network(network.Network):
 
         # self.xmlprettyprint(xml_tree)
 
-# net = Network()
+net = Network()
 
 

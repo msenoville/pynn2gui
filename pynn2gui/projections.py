@@ -7,7 +7,7 @@ from pyNN import common
 from pyNN.core import ezip
 from pyNN.space import Space
 from . import simulator
-from . import network
+# from . import network
 
 
 class Connection(common.Connection):

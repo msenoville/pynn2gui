@@ -1,10 +1,12 @@
+# from notebooks.network import Network
 import numpy
 from pyNN import common
 from pyNN.standardmodels import StandardCellType
 from pyNN.parameters import ParameterSpace, simplify
 from pynn2gui import simulator
-from pynn2gui import network
-from pynn2gui import net as the_network
+# from pynn2gui import net
+# from pynn2gui import net as the_network
+from .network import net
 from .recording import Recorder
 
 class Assembly(common.Assembly):
@@ -50,7 +52,7 @@ class Population(common.Population):
     def __init__(self, size, cellclass, cellparams=None, structure=None,
                 initial_values={}, label=None):
         super(Population, self).__init__(size, cellclass, cellparams, structure ,initial_values, label)
-        the_network.add(self)
+        net.add(self)
         # network.net += self
         # net += self
 

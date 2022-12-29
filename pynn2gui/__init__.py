@@ -14,7 +14,7 @@ from pyNN.common.control import DEFAULT_MAX_DELAY, DEFAULT_TIMESTEP, DEFAULT_MIN
 from pyNN.connectors import *
 from pyNN.recording import *
 from . import simulator
-from . import network
+# from . import network
 from .standardmodels.cells import *
 from .standardmodels.synapses import *
 from .standardmodels.electrodes import *
@@ -80,5 +80,5 @@ record_v = lambda source, filename: record(['v'], source, filename)
 
 record_gsyn = lambda source, filename: record(['gsyn_exc', 'gsyn_inh'], source, filename)
 
-net = Network()
+# net = Network()
 
